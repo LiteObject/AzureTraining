@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace AzureTraining.Controllers
+﻿namespace AzureTraining.Controllers
 {
+    using Microsoft.AspNetCore.Mvc;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     [Route("/")]
     [Route("api/[controller]")]
     [ApiController]
@@ -44,7 +44,7 @@ namespace AzureTraining.Controllers
 
             if (id == default)
             {
-                for (var i = 0; i < 1000; i++)
+                for (var i = 0; i < 100; i++)
                 {
                     values.Add($"value{i}");
                 }
