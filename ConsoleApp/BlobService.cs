@@ -51,7 +51,7 @@
         public async Task DeleteContainerAsync(string containerName)
         {
             Console.WriteLine("Deleting blob container...");
-            BlobContainerClient containerClient = GetBlobContainerClientAsync(containerName);
+            BlobContainerClient containerClient = this.GetBlobContainerClient(containerName);
             await containerClient.DeleteAsync();
         }
 
@@ -68,7 +68,7 @@
             // Write text to the file
             // await File.WriteAllTextAsync(localFilePath, "Hello, World!");
 
-            BlobContainerClient blobContainerClient = this.GetBlobContainerClientAsync(containerName);
+            BlobContainerClient blobContainerClient = this.GetBlobContainerClient(containerName);
 
             // Get a reference to a blob
             BlobClient blobClient = blobContainerClient.GetBlobClient(fileName);
@@ -85,9 +85,9 @@
 
         public async Task<List<string>> GetContainerBlobListAsync(string containerName)
         {
-            Console.WriteLine("Listing blobs...");
+            Console.WriteLine("Listing blobs\n");
 
-            BlobContainerClient blobContainerClient = this.GetBlobContainerClientAsync(containerName);
+            BlobContainerClient blobContainerClient = this.GetBlobContainerClient(containerName);
 
             var result = new List<string>();
 
@@ -98,7 +98,7 @@
 
                 await foreach (BlobItem blobItem in blobs)
                 {
-                    Console.WriteLine("\t" + blobItem.Name);
+                    Console.WriteLine("\t" + blobItem.Name + "\n");
                     result.Add(blobItem.Name);
                 }
             }
@@ -106,32 +106,33 @@
             return result;
         }
         
-        public async Task DownloadBlobAsync(string containerName, string fileName, string localDownloadFilePath)
+        public async Task DownloadBlobAsync(string containerName, string fileName, string localDownloadPath)
         {
-            if (string.IsNullOrWhiteSpace(localDownloadFilePath) || string.IsNullOrWhiteSpace(fileName) || string.IsNullOrWhiteSpace(containerName))
+            if (string.IsNullOrWhiteSpace(localDownloadPath) || string.IsNullOrWhiteSpace(fileName) || string.IsNullOrWhiteSpace(containerName))
             {
-                throw new ArgumentNullException($"{nameof(containerName)}, {nameof(fileName)}, or {nameof(localDownloadFilePath)} cannot be null or empty.");
+                throw new ArgumentNullException($"{nameof(containerName)}, {nameof(fileName)}, or {nameof(localDownloadPath)} cannot be null or empty.");
             }
 
             // Download the blob to a local file
             // Append the string "DOWNLOAD" before the .txt extension so you can compare the files in the data directory
             // string downloadFilePath = localFilePath.Replace(".txt", "DOWNLOAD.txt");
 
-            Console.WriteLine("\nDownloading blob to\n\t{0}\n", localDownloadFilePath);
+            Console.WriteLine("Downloading blob to\n\t{0}\n", localDownloadPath);
 
-            BlobContainerClient blobContainerClient = this.GetBlobContainerClientAsync(containerName);
+            BlobContainerClient blobContainerClient = this.GetBlobContainerClient(containerName);
+
             // Get a reference to a blob
             BlobClient blobClient = blobContainerClient.GetBlobClient(fileName);
 
             // Download the blob's contents and save it to a file
             BlobDownloadInfo download = await blobClient.DownloadAsync();
 
-            await using FileStream downloadFileStream = File.OpenWrite(localDownloadFilePath);
+            await using FileStream downloadFileStream = File.OpenWrite(Path.Combine(localDownloadPath, fileName));
             await download.Content.CopyToAsync(downloadFileStream);
             downloadFileStream.Close();
         }
 
-        private BlobContainerClient GetBlobContainerClientAsync(string containerName)
+        private BlobContainerClient GetBlobContainerClient(string containerName)
         {
             // Create the container and return a container client object
             // BlobContainerClient containerClient = await blobServiceClient.CreateBlobContainerAsync(containerName);

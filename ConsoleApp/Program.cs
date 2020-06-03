@@ -1,6 +1,7 @@
 ﻿namespace ConsoleApp
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Threading.Tasks;
 
@@ -29,18 +30,15 @@
             string connectionString = "DefaultEndpointsProtocol=https;AccountName=mystorage0602;AccountKey=Abp4UveCG9wjIoWBTWeFqI9aU5gBjYAIdpsQbzbGq41ucyJXFBWxCUzoK1hTX14ZI5BrDy013GxIJBgXb5mwxw==;EndpointSuffix=core.windows.net";
             string key = "Abp4UveCG9wjIoWBTWeFqI9aU5gBjYAIdpsQbzbGq41ucyJXFBWxCUzoK1hTX14ZI5BrDy013GxIJBgXb5mwxw==";
 
-            // Create a BlobServiceClient object which will be used to create a container client
-            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+            var containerName = "general";
+            var service = new BlobService(connectionString, key);
+            List<string> blobs =  await service.GetContainerBlobListAsync(containerName);
 
-            // Create a unique name for the container
-            string containerName = "quickstartblobs" + Guid.NewGuid().ToString();
-
-            // Create the container and return a container client object
-            BlobContainerClient containerClient = await blobServiceClient.CreateBlobContainerAsync(containerName);
-
-
-
-
+            foreach (var blobName in blobs)
+            {
+                await service.DownloadBlobAsync(containerName, blobName, "c:\\temp\\");
+            }
+            
             stopWatch.Stop();
             Console.WriteLine($"Time Elapsed: {stopWatch.ElapsedMilliseconds}ms.");
         }
