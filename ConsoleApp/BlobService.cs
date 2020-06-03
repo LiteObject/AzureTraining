@@ -9,21 +9,32 @@
     using Azure.Storage.Blobs;
     using Azure.Storage.Blobs.Models;
 
+    /*
+           // Old
+           using Microsoft.Azure.Storage;
+           using Microsoft.Azure.Storage.Blob;
+           using Microsoft.Azure.Storage.Blob.Protocol;
+
+           //-------------------
+
+           // New v12
+           using Azure;
+           using Azure.Storage.Blobs;
+           using Azure.Storage.Blobs.Models;
+       */
+
     /// <summary>
     /// The blob service.
     /// </summary>
     internal class BlobService
     {
         private readonly BlobServiceClient blobServiceClient;
-        
+
         private readonly string connectionString;
 
-        private readonly string key;
-
-        public BlobService(string connectionString, string key)
+        public BlobService(string connectionString)
         {
             this.connectionString = connectionString;
-            this.key = key;
 
             // Create a BlobServiceClient object which will be used to create a container client
             blobServiceClient = new BlobServiceClient(connectionString);
@@ -105,7 +116,7 @@
 
             return result;
         }
-        
+
         public async Task DownloadBlobAsync(string containerName, string fileName, string localDownloadPath)
         {
             if (string.IsNullOrWhiteSpace(localDownloadPath) || string.IsNullOrWhiteSpace(fileName) || string.IsNullOrWhiteSpace(containerName))

@@ -28,11 +28,10 @@
             stopWatch.Start();
 
             string connectionString = "DefaultEndpointsProtocol=https;AccountName=mystorage0602;AccountKey=Abp4UveCG9wjIoWBTWeFqI9aU5gBjYAIdpsQbzbGq41ucyJXFBWxCUzoK1hTX14ZI5BrDy013GxIJBgXb5mwxw==;EndpointSuffix=core.windows.net";
-            string key = "Abp4UveCG9wjIoWBTWeFqI9aU5gBjYAIdpsQbzbGq41ucyJXFBWxCUzoK1hTX14ZI5BrDy013GxIJBgXb5mwxw==";
-
+            
             var containerName = "general";
-            var service = new BlobService(connectionString, key);
-            List<string> blobs =  await service.GetContainerBlobListAsync(containerName);
+            var service = new BlobService(connectionString);
+            List<string> blobs = await service.GetContainerBlobListAsync(containerName);
 
             foreach (var blobName in blobs)
             {
