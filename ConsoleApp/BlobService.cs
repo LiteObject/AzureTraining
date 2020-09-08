@@ -10,6 +10,7 @@
     using Azure.Storage.Blobs.Models;
 
     /*
+     Source: https://elcamino.cloud/articles/2020-03-30-azure-storage-blobs-net-sdk-v12-upgrade-guide-and-tips.html
            // Old
            using Microsoft.Azure.Storage;
            using Microsoft.Azure.Storage.Blob;
